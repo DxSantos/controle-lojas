@@ -1,4 +1,5 @@
 <?php
+
 require 'config.php';
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -9,17 +10,20 @@ if (empty($_SESSION['usuario_id'])) {
     exit;
 }
 
-// Carrega perfil e permissões do usuário logado
-$stmt = $pdo->prepare("
-    SELECT p.* FROM usuarios u 
-    JOIN perfis p ON p.id = u.perfil_id 
-    WHERE u.id = ?
-");
-$stmt->execute([$_SESSION['usuario_id']]);
-$perfil = $stmt->fetch(PDO::FETCH_ASSOC);
+// Função para verificar permissão
+function temPermissao($pdo, $usuario_id, $nomePermissao) {
+    $stmt = $pdo->prepare("
+        SELECT 1 FROM usuario_permissoes up
+        JOIN permissoes p ON p.id = up.permissao_id
+        WHERE up.usuario_id = ? AND p.nome = ?
+    ");
+    $stmt->execute([$usuario_id, $nomePermissao]);
+    return $stmt->fetch() !== false;
+}
 
-if (!$perfil['pode_cadastrar']) {
-    die("<div class='alert alert-danger m-3'>Você não tem permissão para cadastrar itens.</div>");
+// Exemplo: verificar permissão de cadastro
+if (!temPermissao($pdo, $_SESSION['usuario_id'], 'Cadastrar produtos')) {
+    die("<div class='alert alert-danger m-3'>Você não tem permissão para acessar esta página.</div>");
 }
 
 include 'includes/header.php'; // 🔹 header padronizado
@@ -113,4 +117,4 @@ $tipos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<?php require 'includes/footer.php'; ?>
+<?php include 'includes/footer.php'; ?>
