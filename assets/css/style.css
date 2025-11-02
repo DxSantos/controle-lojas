@@ -1,0 +1,408 @@
+/* ==========================================================
+   ESTILO GERAL DO SISTEMA - CONTROLE DE LOJAS
+   ========================================================== */
+
+/* === Reset e Base === */
+body {
+  background: #f8f9fa;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  padding-top: 70px; /* espaço pro header fixo */
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-weight: 600;
+  color: #333;
+}
+/* === Links de Navegação === */
+
+.main-container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  padding: 30px;
+  gap: 30px;
+  align-items: flex-start;
+}
+/* Formulário */
+form {
+  flex: 1;
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+}
+.form-control,
+.form-select {
+  height: 45px;
+  text-transform: uppercase;
+}
+.form-control select {
+  width: 60px;
+}
+
+/* Listagem */
+.listagem {
+  flex: 2;
+  background: white;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* ocupa toda a altura da tela */
+}
+
+/* Barra de pesquisa fixa no topo */
+.search-bar {
+  flex: 0 0 auto; /* altura fixa, não cresce */
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.search-bar .form-control,
+.search-bar .btn {
+  height: 45px; /* mesma altura do input do formulário */
+  text-transform: uppercase;
+}
+
+.search-bar .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tabela ocupa o restante da altura */
+.scroll-lista {
+  flex: 1 1 auto; /* ocupa o resto do espaço */
+  overflow-y: auto;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+}
+.scroll-lista::-webkit-scrollbar {
+  width: 8px;
+}
+.scroll-lista::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+.scroll-lista::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Tabela estilizada */
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #f1f3f5;
+}
+.table-hover tbody tr:hover {
+  background-color: #d9edf7;
+  transition: background-color 0.3s;
+}
+.table th,
+.table td {
+  vertical-align: middle;
+  padding: 12px 15px;
+
+}
+
+/* Navbar */
+
+.userInfo {
+  color: #ffffff;
+  font-size: 14px;
+ 
+}
+
+
+/* Responsivo: formulário acima em telas pequenas */
+@media (max-width: 991px) {
+  .main-container {
+    flex-direction: column;
+    padding: 15px;
+  }
+  .listagem {
+    margin-top: 20px;
+    height: auto; /* altura automática para mobile */
+  }
+}
+
+/* === Navbar === */
+.navbar {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-brand {
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.nav-link.active {
+  font-weight: 600;
+}
+
+/* === Layout de Containers === */
+.container {
+  max-width: 1200px;
+}
+
+/* === Cartões de Produtos e Inventário === */
+.produto-card,
+.inventario-card {
+  margin-bottom: 25px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.produto-card .card-header,
+.inventario-card .card-header {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.produto-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.produto-item:last-child {
+  border-bottom: none;
+}
+
+/* === Controle de Quantidade === */
+.quantidade-control {
+  display: flex;
+  align-items: center;
+}
+
+.quantidade-control input {
+  width: 70px;
+  text-align: center;
+  height: 40px;
+  margin: 0 6px;
+  border-radius: 6px;
+}
+
+.quantidade-control button {
+  height: 40px;
+  width: 40px;
+  padding: 0;
+  border-radius: 6px;
+}
+
+/* === Resumo Flutuante === */
+#resumo-flutuante {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  width: 350px;
+  max-height: 80vh;
+  overflow-y: auto;
+  background: #6c757d;
+  color: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: none;
+  opacity: 0;
+  transition: opacity 0.6s ease, box-shadow 0.5s ease;
+  z-index: 1000;
+}
+
+#resumo-flutuante.glow {
+  box-shadow: 0 0 15px 5px rgba(255, 193, 7, 0.7);
+}
+
+#resumo-flutuante h5 {
+  color: #fff;
+  font-weight: 600;
+}
+
+#resumo-flutuante table th,
+#resumo-flutuante table td {
+  padding: 5px 8px;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+/* === Botões de Modo === */
+.modo-btn {
+  transition: all 0.2s ease-in-out;
+}
+
+.modo-btn.active {
+  color: #fff !important;
+  transform: scale(1.05);
+}
+
+/* === Alerta Bootstrap Customizado === */
+.alert {
+  font-size: 15px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+/* === Tabelas de Cadastro / Listagem === */
+.table-custom {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table-custom th {
+  background: #0d6efd;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+.table-custom td {
+  vertical-align: middle;
+  font-size: 14px;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f1f3f6;
+}
+
+/* === Botões Padrão === */
+.btn {
+  border-radius: 6px !important;
+}
+
+.btn-primary {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.btn-warning {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.btn-success {
+  background-color: #198754;
+}
+
+.btn-outline-warning {
+  border-color: #ffc107;
+  color: #ffc107;
+}
+
+.btn-outline-warning:hover {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.btn-outline-success:hover {
+  background-color: #198754;
+  color: #fff;
+}
+
+/* === Campos de Formulário === */
+input[type="text"],
+input[type="number"],
+select {
+  border-radius: 6px;
+}
+
+/* === Header Fixo === */
+body {
+  background: #f8f9fa;
+  padding-top: 70px;
+}
+
+.navbar-brand {
+  font-weight: bold;
+}
+
+footer {
+  background: #343a40;
+  color: #fff;
+  padding: 10px 0;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.nav-link.active {
+  font-weight: bold;
+  color: #ffc107 !important;
+  text-decoration: none;
+}
+
+/* === Footer === */
+footer {
+  background: #343a40;
+  color: #fff;
+  padding: 12px 0;
+  text-align: center;
+  font-size: 14px;
+  margin-top: 40px;
+}
+
+/* === Página de Inventário === */
+.inventario-header {
+  background: #6610f2;
+  color: white;
+  font-weight: 600;
+}
+
+.inventario-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.inventario-item input {
+  width: 80px;
+  text-align: center;
+}
+
+/* === Página de Cadastro === */
+.form-cadastro {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-cadastro h5 {
+  font-weight: 600;
+  color: #333;
+}
+
+.form-cadastro .btn {
+  min-width: 120px;
+}
+
+/* === Animações === */
+.fade-in {
+  animation: fadeIn 0.6s ease-in;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* ==========================================================
+   FIM DO ESTILO GERAL DO SISTEMA
+   ========================================================== */
