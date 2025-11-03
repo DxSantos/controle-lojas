@@ -14,7 +14,7 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="container py-4">
     <h3 class="mb-4">Usuários do Sistema</h3>
 
-    <a href="usuario_novo.php" class="btn btn-success mb-3">➕ Novo Usuário</a>
+    <a href="sections/register.php" class="btn btn-success mb-3">➕ Novo Usuário</a>
 
     <table class="table table-striped table-hover">
         <thead class="table-light">

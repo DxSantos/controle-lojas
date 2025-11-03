@@ -328,14 +328,6 @@ body {
   font-weight: bold;
 }
 
-footer {
-  background: #343a40;
-  color: #fff;
-  padding: 10px 0;
-  text-align: center;
-  margin-top: 40px;
-}
-
 .nav-link.active {
   font-weight: bold;
   color: #ffc107 !important;

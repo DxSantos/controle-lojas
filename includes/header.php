@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Se não estiver logado, redireciona
 if (empty($_SESSION['usuario_id'])) {
-    header('Location: login.php');
+    header('Location: sections/login.php');
     exit;
 }
 
@@ -90,6 +90,7 @@ $pagina_atual = basename($_SERVER['PHP_SELF']);
                     <ul class="dropdown-menu" aria-labelledby="menuUsuarios">
                         <li><a class="dropdown-item" href="usuarios_lista.php">Usuários</a></li>
                         <li><a class="dropdown-item" href="permissoes_usuario.php">Permissões de Usuário</a></li>
+                        <li><a class="dropdown-item" href="permissoes_cadastro.php">Permissões de Cadastro</a></li>
                     </ul>
                 </li>
                 <?php endif; ?>
@@ -110,4 +111,4 @@ $pagina_atual = basename($_SERVER['PHP_SELF']);
 
 
 <!-- espaçamento para o topo fixo -->
-<div style="height:70px;"></div>
+<div style="height:10px;"></div>

@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 <section class="register-card">
-    <h4 class="mb-4 text-center text-success">Criar Conta</h4>
+    <h4 class="mb-4 text-center text-success">Cadastro de Usuário</h4>
 
     <?php if ($msg): ?>
         <div class="alert alert-info"><?= htmlspecialchars($msg) ?></div>

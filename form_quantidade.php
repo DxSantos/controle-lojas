@@ -11,14 +11,20 @@ if (empty($_SESSION['usuario_id'])) {
     exit;
 }
 
-// Bloqueia se o usuário não tiver permissão "produtos"
-if (!verificaPermissao('vendas')) {
+// Bloqueia se o usuário não tiver permissão "movimentacao"
+if (!verificaPermissao('movimentacao')) {
     echo "<div class='alert alert-danger m-4 text-center'>
             🚫 Você não tem permissão para acessar esta página.
           </div>";
     include 'includes/footer.php';
     exit;
 }
+
+// ----- PERMISSÕES DE USUÁRIO BOTÕES -----
+$canEnviar = verificaPermissao('envios'); // 🔹 checa se o usuário pode mexer em envios
+$canEstoque = verificaPermissao('estoque'); // 🔹 checa se o usuário pode mexer em estoque
+$canVendas = verificaPermissao('vendas'); // 🔹 checa se o usuário pode mexer em vendas
+
 
 // ----- LISTAR TIPOS E PRODUTOS -----
 $tipos = $pdo->query("SELECT * FROM tipos ORDER BY nome")->fetchAll(PDO::FETCH_ASSOC);
@@ -57,9 +63,17 @@ if ($saldos_stmt) {
             <!-- Botões principais no topo -->
             <div class="d-flex flex-wrap align-items-center justify-content-between mb-3">
                 <div id="modo-container" class="btn-group" role="group" aria-label="Modos">
-                    <button type="button" class="btn btn-outline-primary modo-btn active" data-modo="vendas">Vendas</button>
-                    <button type="button" class="btn btn-outline-warning modo-btn" data-modo="envios">Envios</button>
-                    <button type="button" class="btn btn-outline-success modo-btn" data-modo="estoque">Estoque</button>
+                    <?php if ($canVendas): ?>
+                        <button type="button" class="btn btn-outline-primary modo-btn active" data-modo="vendas">Vendas</button>
+                    <?php endif; ?>
+
+                    <?php if ($canEnviar): ?>
+                        <button type="button" class="btn btn-outline-warning modo-btn" data-modo="envios">Envios</button>
+                    <?php endif; ?>
+                    
+                    <?php if ($canEstoque): ?>
+                        <button type="button" class="btn btn-outline-success modo-btn" data-modo="estoque">Estoque</button>
+                    <?php endif; ?>
                 </div>
 
                 <div class="d-flex gap-2">

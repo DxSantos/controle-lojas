@@ -120,7 +120,7 @@ $permissoes_usuario = array_column($stmt->fetchAll(PDO::FETCH_ASSOC), 'permissao
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="permissoes[]" value="<?= $p['id'] ?>"
                             id="perm<?= $p['id'] ?>" <?= in_array($p['id'], $permissoes_usuario) ? 'checked' : '' ?>>
-                        <label class="form-check-label" for="perm<?= $p['id'] ?>">
+                        <label class="form-check-label text-capitalize" for="perm<?= $p['id'] ?>">
                             <?= htmlspecialchars($p['nome']) ?>
                             <small class="text-muted">(<?= htmlspecialchars($p['chave']) ?>)</small>
                         </label>
