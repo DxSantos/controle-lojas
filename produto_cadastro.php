@@ -1,6 +1,25 @@
 <?php
 
 require 'config.php';
+require 'includes/verifica_permissao.php';
+include 'includes/header.php';
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+if (empty($_SESSION['usuario_id'])) {
+    header('Location: login.php');
+    exit;
+}
+
+// Bloqueia se o usuário não tiver permissão "produtos"
+if (!verificaPermissao('produtos')) {
+    echo "<div class='alert alert-danger m-4 text-center'>
+            🚫 Você não tem permissão para acessar esta página.
+          </div>";
+    include 'includes/footer.php';
+    exit;
+}
 
 // ----- MENSAGEM DE RETORNO -----
 $msg = '';

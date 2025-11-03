@@ -1,5 +1,24 @@
 <?php
 require 'config.php';
+require 'includes/verifica_permissao.php';
+include 'includes/header.php';
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+if (empty($_SESSION['usuario_id'])) {
+    header('Location: login.php');
+    exit;
+}
+
+// Bloqueia se o usuário não tiver permissão "produtos"
+if (!verificaPermissao('vendas')) {
+    echo "<div class='alert alert-danger m-4 text-center'>
+            🚫 Você não tem permissão para acessar esta página.
+          </div>";
+    include 'includes/footer.php';
+    exit;
+}
 
 // ----- LISTAR TIPOS E PRODUTOS -----
 $tipos = $pdo->query("SELECT * FROM tipos ORDER BY nome")->fetchAll(PDO::FETCH_ASSOC);
