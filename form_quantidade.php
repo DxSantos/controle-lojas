@@ -37,15 +37,25 @@ foreach ($tipos as $tipo) {
     $produtos_por_tipo[$tipo['id']] = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Buscar todos os saldos de uma vez (produto_id => saldo)
-$saldos_stmt = $pdo->query("SELECT produto_id, saldo FROM saldo_produtos");
-$saldos = [];
-if ($saldos_stmt) {
-    $rows = $saldos_stmt->fetchAll(PDO::FETCH_ASSOC);
-    foreach ($rows as $r) {
-        $saldos[$r['produto_id']] = $r['saldo'];
-    }
+// Buscar todos os saldos de uma vez (produto_id => saldo) considerando a loja atual
+$loja_id = $_SESSION['loja_id'] ?? null;
+
+if (!$loja_id) {
+    echo "<div class='alert alert-warning m-4 text-center'>
+            ⚠️ Nenhuma loja selecionada. Por favor, selecione uma loja para continuar.
+          </div>";
+    include 'includes/footer.php';
+    exit;
 }
+
+$saldos_stmt = $pdo->prepare("SELECT produto_id, saldo FROM saldo_produtos WHERE loja_id = ?");
+$saldos_stmt->execute([$loja_id]);
+$saldos = [];
+$rows = $saldos_stmt->fetchAll(PDO::FETCH_ASSOC);
+foreach ($rows as $r) {
+    $saldos[$r['produto_id']] = $r['saldo'];
+}
+
 ?>
 
 <?php require 'includes/header.php'; ?>

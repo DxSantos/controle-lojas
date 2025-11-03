@@ -7,15 +7,27 @@ date_default_timezone_set('America/Sao_Paulo');
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+// 🔹 Verifica login
 if (empty($_SESSION['usuario_id'])) {
     header('Location: login.php');
     exit;
 }
 
-// Bloqueia se o usuário não tiver permissão "inventario"
+// 🔹 Verifica permissão "inventario"
 if (!verificaPermissao('inventario')) {
     echo "<div class='alert alert-danger m-4 text-center'>
             🚫 Você não tem permissão para acessar esta página.
+          </div>";
+    include 'includes/footer.php';
+    exit;
+}
+
+// 🔹 Garante que uma loja está selecionada
+$loja_id = $_SESSION['loja_id'] ?? null;
+if (!$loja_id) {
+    echo "<div class='alert alert-warning m-4 text-center'>
+            ⚠️ Nenhuma loja selecionada. Por favor, selecione uma loja para continuar.
           </div>";
     include 'includes/footer.php';
     exit;
@@ -29,20 +41,30 @@ $tipo_id = !empty($_GET['tipo_id']) ? (int)$_GET['tipo_id'] : null;
 
 // ----- AGRUPAR PRODUTOS POR TIPO -----
 $produtos_por_tipo = [];
+
 foreach ($tipos as $tipo) {
     if ($tipo_id && (int)$tipo_id !== (int)$tipo['id']) continue;
 
+    // 🔹 Consulta ajustada com filtro de loja
     $sql = "
-        SELECT p.id, p.nome,
-               sp.saldo AS saldo_atual,
-               sp.data_ultimo_inventario
+        SELECT 
+            p.id,
+            p.nome,
+            COALESCE(sp.saldo, 0) AS saldo_atual,
+            sp.data_ultimo_inventario
         FROM produtos p
-        LEFT JOIN saldo_produtos sp ON sp.produto_id = p.id
+        LEFT JOIN saldo_produtos sp 
+            ON sp.produto_id = p.id 
+           AND sp.loja_id = :loja_id
         WHERE p.tipo = :tipo_id
         ORDER BY p.nome
     ";
+
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([':tipo_id' => $tipo['id']]);
+    $stmt->execute([
+        ':loja_id' => $loja_id,
+        ':tipo_id' => $tipo['id']
+    ]);
     $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($produtos) $produtos_por_tipo[$tipo['nome']] = $produtos;
@@ -50,13 +72,15 @@ foreach ($tipos as $tipo) {
 ?>
 
 <div class="container py-4">
-    <h3 class="mb-3">Inventário de Produtos</h3>
+    <h3 class="mb-3">
+        Inventário de Produtos — 
+        <span class="text-primary"><?= htmlspecialchars($_SESSION['loja_nome'] ?? 'Loja não selecionada') ?></span>
+    </h3>
 
     <!-- ===== FORMULÁRIO DE FILTRO (GET) ===== -->
-    <form method="GET" class="mb-1 d-flex align-items-center" style="display: flex; position: relative; gap: 15px; padding: 10px;">
-    <label class="form-label mb-1">Filtrar por Tipo</label>    
-    <div style="min-width: 230px; ">
-            
+    <form method="GET" class="mb-1 d-flex align-items-center" style="gap: 15px; padding: 10px;">
+        <label class="form-label mb-1">Filtrar por Tipo</label>    
+        <div style="min-width: 230px;">
             <select name="tipo_id" class="form-select" id="tipoFiltro" onchange="this.form.submit()">
                 <option value="">Todos</option>
                 <?php foreach ($tipos as $tipo): ?>
@@ -70,6 +94,7 @@ foreach ($tipos as $tipo) {
 
     <!-- ===== FORMULÁRIO DE INVENTÁRIO (POST) ===== -->
     <form id="form-inventario" method="POST" action="salvar_inventario.php" class="border rounded p-3 bg-light shadow-sm">
+        <input type="hidden" name="loja_id" value="<?= $loja_id ?>">
 
         <div class="d-flex align-items-center justify-content-end mb-3 gap-2">
             <button type="button" id="btn-guardar" class="btn btn-outline-warning fw-bold">Guardar Valores</button>
@@ -79,7 +104,9 @@ foreach ($tipos as $tipo) {
         <div class="row">
             <?php if (empty($produtos_por_tipo)): ?>
                 <div class="col-12">
-                    <div class="alert alert-info text-center">Nenhum produto encontrado para este filtro.</div>
+                    <div class="alert alert-info text-center">
+                        Nenhum produto encontrado para esta loja.
+                    </div>
                 </div>
             <?php endif; ?>
 
@@ -94,13 +121,14 @@ foreach ($tipos as $tipo) {
                                 <div class="produto-item d-flex justify-content-between align-items-center border-bottom py-2">
                                     <span>
                                         <?= htmlspecialchars($produto['nome']) ?>
-                                        <?php if (!empty($produto['saldo_atual'])): ?>
-                                            <small class="text-muted">(Saldo atual: <?= (float)$produto['saldo_atual'] ?>)</small>
-                                        <?php endif; ?>
+                                        <small class="text-muted">
+                                            (Saldo atual: <?= number_format($produto['saldo_atual'], 2, ',', '.') ?>)
+                                        </small>
                                     </span>
                                     <div class="quantidade-control d-flex align-items-center">
                                         <button type="button" class="btn btn-outline-secondary btn-minus">-</button>
-                                        <input type="number" name="quantidade[<?= $produto['id'] ?>]" value="0" min="0" class="form-control text-center mx-1" style="width:70px;">
+                                        <input type="number" name="quantidade[<?= $produto['id'] ?>]" value="0" min="0"
+                                               class="form-control text-center mx-1" style="width:70px;">
                                         <button type="button" class="btn btn-outline-secondary btn-plus">+</button>
                                     </div>
                                 </div>

@@ -96,6 +96,17 @@ $pagina_atual = basename($_SERVER['PHP_SELF']);
                 <?php endif; ?>
             </ul>
 
+            <?php if (!empty($_SESSION['loja_nome'])): ?>
+        <div class="dropdown me-3">
+          <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            <i class="bi bi-shop"></i> <?= htmlspecialchars($_SESSION['loja_nome']) ?>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="trocar_loja.php"><i class="bi bi-arrow-repeat"></i> Trocar Loja</a></li>
+          </ul>
+        </div>
+      <?php endif; ?>
+
             <!-- Usuário logado -->
             <div class="d-flex align-items-center text-white">
                 <i class="bi bi-person-circle fs-5 me-2"></i>
@@ -107,6 +118,8 @@ $pagina_atual = basename($_SERVER['PHP_SELF']);
         </div>
     </div>
 </nav>
+
+<?php include 'includes/modal_lojas.php'; ?>
 
 
 
