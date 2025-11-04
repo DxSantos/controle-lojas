@@ -76,10 +76,20 @@ $pagina_atual = basename($_SERVER['PHP_SELF']);
                 </li>
 
                 <!-- Relatórios -->
-                <li class="nav-item">
-                    <a class="nav-link <?= $pagina_atual === 'relatorio_movimentacao.php' ? 'active' : '' ?>" href="relatorio_movimentacao.php">Relatórios</a>
-                </li>
 
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle <?= in_array($pagina_atual, ['relatorio_movimentacao.php','relatorio_saldos.php','relatorio_dashboard.php','relatorio_analitico.php']) ? 'active' : '' ?>"
+                       href="#" id="menuRelatorios" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Relatórios
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="menuRelatorios">
+                        <li><a class="dropdown-item" href="relatorio_movimentacao.php">Relatório de Movimentação</a></li>
+                        <li><a class="dropdown-item" href="relatorio_saldos.php">Relatório de Saldos</a></li>
+                        <li><a class="dropdown-item" href="relatorio_dashboard.php">Relatório Dashboard</a></li>
+                        <li><a class="dropdown-item" href="relatorio_analitico.php">Relatório Analítico</a></li>
+                    </ul>
+                </li>
+                
                 <!-- Administração -->
                 <?php if ($isAdmin): ?>
                 <li class="nav-item dropdown">

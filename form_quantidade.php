@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('America/Sao_Paulo');
 require 'config.php';
 require 'includes/verifica_permissao.php';
 include 'includes/header.php';
