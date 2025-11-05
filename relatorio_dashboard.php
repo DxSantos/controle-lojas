@@ -1,9 +1,26 @@
 <?php
 require 'config.php';
 include 'includes/header.php';
+require 'includes/verifica_permissao.php';
 date_default_timezone_set('America/Sao_Paulo');
 
-if (session_status() === PHP_SESSION_NONE) session_start();
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+if (empty($_SESSION['usuario_id'])) {
+    header('Location: login.php');
+    exit;
+}
+
+// Bloqueia se o usuário não tiver permissão "Relatório de Dashboard"
+if (!verificaPermissao('dashboard')) {
+    echo "<div class='alert alert-danger m-4 text-center'>
+            🚫 Você não tem permissão para acessar esta página.
+          </div>";
+    include 'includes/footer.php';
+    exit;
+}
 
 // ====== FILTROS ======
 $data_inicio = $_GET['data_inicio'] ?? '';

@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('America/Sao_Paulo');
 require 'config.php';
 require 'includes/verifica_permissao.php';
 include 'includes/header.php';
@@ -11,15 +12,14 @@ if (empty($_SESSION['usuario_id'])) {
     exit;
 }
 
-// Bloqueia se o usuário não tiver permissão "vendas"
-if (!verificaPermissao('vendas')) {
+// Bloqueia se o usuário não tiver permissão "relatorio_movimentacao"
+if (!verificaPermissao('movimentacao')) {
     echo "<div class='alert alert-danger m-4 text-center'>
             🚫 Você não tem permissão para acessar esta página.
           </div>";
     include 'includes/footer.php';
     exit;
 }
-date_default_timezone_set('America/Sao_Paulo');
 
 // Filtro opcional por tipo
 $tipo_id = !empty($_GET['tipo_id']) ? (int)$_GET['tipo_id'] : null;
