@@ -102,7 +102,7 @@ body {
 <body>
 <div class='email-container'>
     <div class='header'>
-        <img src='https://i.ibb.co/Xz2sPbm/store-logo.png' alt='Logo'>
+        <a href='https://ibb.co/RkKKKDmv'><img src='https://i.ibb.co/RkKKKDmv/dl-apps-logo.png' alt='dl-apps-logo' border='0'></a>
         <h2>Controle de Lojas</h2>
     </div>
 
