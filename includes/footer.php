@@ -1,4 +1,4 @@
-<footer class="bg-dark text-white text-center fixed-bottom py-2 mt-5">
+<footer class="bg-dark text-white text-center py-2 mt-5">
 
     <a href='https://ibb.co/RkKKKDmv'><img style="height: 30px;" src='https://i.ibb.co/RkKKKDmv/dl-apps-logo.png' alt='dl-apps-logo' border='0'></a>
 
