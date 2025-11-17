@@ -70,6 +70,11 @@ $pagina_atual = basename($_SERVER['PHP_SELF']);
                     <a class="nav-link <?= $pagina_atual === 'form_quantidade.php' ? 'active' : '' ?>" href="form_quantidade.php">Movimentações</a>
                 </li>
 
+                <!-- Contagem -->
+                <li class="nav-item">
+                    <a class="nav-link <?= $pagina_atual === 'form_contagem.php' ? 'active' : '' ?>" href="form_contagem.php">Contagem</a>
+                </li>
+
                 <!-- Inventário -->
                 <li class="nav-item">
                     <a class="nav-link <?= $pagina_atual === 'form_inventario.php' ? 'active' : '' ?>" href="form_inventario.php">Inventário</a>

@@ -27,8 +27,9 @@ $canEstoque = verificaPermissao('estoque'); // 🔹 checa se o usuário pode mex
 $canVendas = verificaPermissao('vendas'); // 🔹 checa se o usuário pode mexer em vendas
 
 
-// ----- LISTAR TIPOS E PRODUTOS -----
-$tipos = $pdo->query("SELECT * FROM tipos ORDER BY nome")->fetchAll(PDO::FETCH_ASSOC);
+// ----- LISTAR TIPOS QUE PODEM SER VISUALIZADOS EM MOVIMENTOS -----
+$tipos = $pdo->query("SELECT * FROM tipos WHERE visualizar_movimentos = 1 ORDER BY nome")->fetchAll(PDO::FETCH_ASSOC);
+
 
 // Agrupa produtos por tipo
 $produtos_por_tipo = [];
@@ -73,7 +74,7 @@ foreach ($rows as $r) {
 
             <!-- Botões principais no topo -->
             <div class="d-flex flex-wrap align-items-center justify-content-between mb-3">
-                <div id="modo-container" class="btn-group" role="group" aria-label="Modos">
+                <div id="modo-container" class="btn-group" style="gap: 0.5rem;" role="group" aria-label="Modos">
                     <?php if ($canVendas): ?>
                         <button type="button" class="btn btn-outline-primary modo-btn active" data-modo="vendas">Vendas</button>
                     <?php endif; ?>
@@ -81,7 +82,7 @@ foreach ($rows as $r) {
                     <?php if ($canEnviar): ?>
                         <button type="button" class="btn btn-outline-warning modo-btn" data-modo="envios">Envios</button>
                     <?php endif; ?>
-                    
+
                     <?php if ($canEstoque): ?>
                         <button type="button" class="btn btn-outline-success modo-btn" data-modo="estoque">Estoque</button>
                     <?php endif; ?>
@@ -93,11 +94,11 @@ foreach ($rows as $r) {
                 </div>
             </div>
 
-            <!-- Alerta Bootstrap -->
             <div id="alerta-salvo" class="alert alert-success alert-dismissible fade" role="alert" style="display:none;">
                 <strong id="alerta-texto"></strong>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
+
 
             <!-- Botão valores guardados -->
             <div class="mb-3">
@@ -372,9 +373,10 @@ foreach ($rows as $r) {
             setTimeout(() => resumo.style.display = 'none', 350);
         });
 
-        // Ao salvar no banco
+        // Ao clicar "Salvar no Banco"
         form.addEventListener('submit', async (e) => {
-            // desabilita botão para evitar cliques duplos
+            e.preventDefault(); // impede envio imediato
+
             btnSalvarBanco.disabled = true;
 
             // Limpa os valores guardados apenas do modo atual
@@ -394,11 +396,12 @@ foreach ($rows as $r) {
                 console.error('Erro ao limpar valores guardados:', err);
             }
 
-            // Mostra alerta de sucesso
+            // 🔔 --- EXIBIR ALERTA IMEDIATAMENTE ---
             const alertaTexto = document.getElementById('alerta-texto');
-            alertaTexto.textContent = `Sucesso! Valores de ${modoAtual.toUpperCase()} salvos no banco.`;
+            alertaTexto.textContent = `Sucesso! Valores de ${modoAtual.toUpperCase()} enviados ao banco.`;
 
-            alertaSalvo.classList.remove('alert-warning', 'alert-info', 'alert-success');
+            alertaSalvo.classList.remove('alert-primary', 'alert-warning', 'alert-success');
+
             if (modoAtual === 'vendas') alertaSalvo.classList.add('alert-primary');
             else if (modoAtual === 'envios') alertaSalvo.classList.add('alert-warning');
             else if (modoAtual === 'estoque') alertaSalvo.classList.add('alert-success');
@@ -406,10 +409,10 @@ foreach ($rows as $r) {
             alertaSalvo.style.display = 'block';
             alertaSalvo.classList.add('show');
 
-            // Recarrega a página após alguns segundos
+            // ⏳ Espera 2 segundos e envia o form DE VERDADE
             setTimeout(() => {
-                location.reload();
-            }, 2500);
+                form.submit();
+            }, 8000);
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
